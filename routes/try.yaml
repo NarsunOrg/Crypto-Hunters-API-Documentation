@@ -1,0 +1,2449 @@
+openapi: 3.0.3
+info:
+  tags:
+    - name: User
+      description: Login to Crypto Hunters
+      externalDocs:
+        description: Find out more
+    - name: Friend Routes
+      description: Everything about your Friends
+      externalDocs:
+        description: Find out more
+    - name: Family Routes
+      description: Everything about your Family
+      externalDocs:
+        description: Find out more
+    - name: Admin Routes
+      description: Everything about your Admin
+      externalDocs:
+        description: Find out more
+    - name: Task Routes
+      description: Everything about your Tasks
+      externalDocs:
+        description: Find out more
+    - name: Announcement Routes
+      description: Everything about Announcements
+      externalDocs:
+        description: Find out more
+    - name: Quest Routes
+      description: Everything about Quest
+      externalDocs:
+        description: Find out more
+    - name: Additional Routes
+      description: Everything about Additional Routes
+      externalDocs:
+        description: Find out more
+    - name: Agreement Routes
+      description: Everything about Agreement Routes
+      externalDocs:
+        description: Find out more
+
+
+paths:
+  /api/user/signup:
+    post:
+      summary: SignUp to the application
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+            example:
+              email: "kissa+21@narsun.pk"
+              password: "Testing@123"
+              userName: "Kissa21"
+              phoneNumber: "03320140221"
+              countryCode: "pk"
+              phoneCode: "+92"
+              phoneCountryCode: "pk"
+              city: "lAHoRe"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Invalid request body or credentials
+        '500':
+          description: Internal server error
+
+  /api/user/login:
+    post:
+      summary: Login to the application
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginCredentials'
+            example:
+              email: kissa+5@narsun.pk
+              password: Testing@123
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Invalid request body or credentials
+        '500':
+          description: Internal server error
+
+  /api/user/send-code:
+    post:
+      summary: Send Code To User Email Address or Phone Number
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendCodeRequest'
+            example:
+              email: "kissa+21@narsun.pk"
+              phoneNumber: "03320140221"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendCodeResponse'
+        '400':
+          description: Invalid request body or credentials
+        '500':
+          description: Internal server error
+
+  /api/user/verify:
+    post:
+      tags:
+       - User
+      summary: Verify email and phone number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerificationRequest'
+            example:
+              email: "kissa+21@narsun.pk"
+              emailVerificationCode: "123469"
+              phoneNumber: "03320140221"
+              smsVerificationCode: "000000"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendCodeResponse'
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+  /api/user/restore-password:
+    post:
+      tags:
+        - User
+      summary: User can restore his password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordRestorationRequest'
+            example:
+              email: "kissa+21@narsun.pk"
+              emailVerificationCode: "123469"
+              phoneNumber: "03320140221"
+              smsVerificationCode: "000000"
+              password: "password"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendCodeResponse'
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+
+  /api/user/my-profile:
+    get:
+      summary: User's Own Profile Data
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+                example:
+                  _id: "64afd4393c9707e27548580d"
+                  role: "player"
+                  email: "kissa+5@narsun.pk"
+                  walletAddress: "0x7a85642682b13b68413151202935b9c9e266467e"
+                  userName: "Kissa5"
+                  countryCode: "PK"
+                  countryName: "Pakistan"
+                  city: "lahore"
+                  currentLocation:
+                    countryCode: "PK"
+                    countryName: "Pakistan"
+                    city: "Lahore"
+                    longitude: 74.27701528101355
+                    latitude: 31.457382972197802
+                  phone:
+                    phoneCountryCode: "PK"
+                    phoneCode: "+92"
+                    phoneNumber: "3320140325"
+                    fullPhoneNumber: "+923320140325"
+                  xp: 0
+                  deviceTokens:
+                    - "some string"
+        '400':
+          description: Invalid request body or credentials
+        '500':
+          description: Internal server error
+
+  /api/user/friend/list:
+    get:
+      summary: Get friend list
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendList'
+        '400':
+          description: Invalid request body or credentials
+        '500':
+          description: Internal server error
+  /api/user/friend/request/pending:
+    get:
+      summary: Get pending friend request
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendList'
+        '400':
+          description: Invalid request body or credentials
+        '500':
+          description: Internal server error
+
+  /api/user/profile/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        description: ID of the user
+        required: true
+        type: string
+    get:
+      summary: Get user profile from user ID
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid request body or credentials
+        '500':
+          description: Internal server error
+  /api/user/family/list:
+    get:
+      summary: Get family list
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FamilyList'
+        '400':
+          description: Invalid request body or credentials
+        '500':
+          description: Internal server error
+
+
+
+
+  /api/user/update:
+    put:
+      summary: Update User's City
+      description: Update the city of a user.
+      tags:
+        - User
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        description: User's City Data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                city:
+                  type: string
+                  example: Lahore
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Unauthorized Access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+  /api/user/friend/search:
+    get:
+      summary: Search User's Friends
+      description: Search for friends based on name string.
+      tags:
+        - Friend Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: nameString
+          in: query
+          description: The name string to search for friends.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchFriend'
+
+        '401':
+          description: Unauthorized Access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
+  /api/user/friend/mutual/{userId}:
+    get:
+      summary: Get Mutual Friends
+      description: Get the list of mutual friends for a given user ID.
+      tags:
+        - Friend Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to find mutual friends for.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMutualFriendList'
+
+  /api/user/friend/request/send:
+    post:
+      summary: Send a friend request
+      description: Send a friend request to another user.
+      tags:
+        - Friend Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequest'
+      responses:
+        '200':
+          description: Friend request sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendRequestResponse'
+
+
+  /api/user/friend/request/accept:
+    post:
+      summary: Accept a friend request
+      description: Accept a friend request send by another user.
+      tags:
+        - Friend Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequest'
+      responses:
+        '200':
+          description: Friend request sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendAcceptResponse'
+  /api/user/friend/remove:
+    post:
+      summary: Remove a friend
+      description: Remove a friend that needs to be your friend before.
+      tags:
+        - Friend Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequest'
+      responses:
+        '200':
+          description: Friend request sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendRemoveResponse'
+
+  /api/user/friend/request/reject:
+    post:
+      summary: Reject A friend request
+      description: Rejects A friend request needs to have a friend request from that user.
+      tags:
+        - Friend Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequest'
+      responses:
+        '200':
+          description: Friend request sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendAcceptResponse'
+
+  /api/user/friend/request/cancel:
+    post:
+      summary: Cancel A friend request
+      description: Cancels A friend request sent by a user to you.
+      tags:
+        - Friend Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequest'
+      responses:
+        '200':
+          description: Friend request sent successfully.
+          content:
+            application/json:
+              schema:
+                schema:
+                  $ref: '#/components/schemas/SuccessResponse'
+                example:
+                  success: true
+  /api/user/family/add/{userId}:
+    get:
+      summary: Get Family Friends
+      description:
+      tags:
+        - Family Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to find mutual friends for.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMutualFriendList'
+
+  /api/user/family/remove:
+    post:
+      summary: Remove A Family member
+      description: Remove a user from a family list not from friends.
+      tags:
+        - Family Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendRequestResponse'
+
+  /api/admin/signup:
+    post:
+      summary: SignUp as Admin
+      description: Admin SIgnUp Page
+      tags:
+        - Admin Routes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminSignUp'
+            example:
+              email: kissa+302@narsun.pk
+              password: Testing@123
+              fullName: Kissa Admin Three
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendCodeResponse'
+
+  /api/admin/login:
+    post:
+      summary: SignUp as Admin
+      description: Admin SIgnUp Page
+      tags:
+        - Admin Routes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendCodeRequest'
+            example:
+              email: kissa+302@narsun.pk
+              password: Testing@123
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendCodeResponse'
+
+  /api/admin/verify-login:
+    post:
+      summary: Verify Login
+      description: Verify Login via email code
+      tags:
+        - Admin Routes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminVerifySignUp'
+            example:
+              email: kissa+200@narsun.pk
+              password: Testing@1234
+              nonce: "223180"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+
+
+
+  /api/admin/forget-password:
+    post:
+      summary: Forget Password
+      description: It will email you the verification code
+      tags:
+        - Admin Routes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+            example:
+              email: kissa+200@narsun.pk
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendCodeResponse'
+
+
+  /api/admin/restore-password:
+    post:
+      summary: Restore Password
+      description: Enter New password and code sent to your email here to reset password
+      tags:
+        - Admin Routes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminForgetSignUp'
+            example:
+              email: kissa+200@narsun.pk
+              forgotPasswordNonce: "223180"
+              password: Testing@1234
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendCodeResponse'
+
+
+  /api/admin/profile:
+    get:
+      summary: Get admin profile
+      description: Get admin profile
+      tags:
+        - Admin Routes
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminResponse'
+
+
+  /api/admin/update:
+    put:
+      summary: Update Admin
+      description: Update Admin Profile
+      tags:
+        - Admin Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminData'
+            example:
+              fullName: "Kissa100_Admin"
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminResponse'
+
+
+  /api/admin/task/create:
+    post:
+      summary: Create Task
+      description: Create New Tasks for the game
+      tags:
+        - Task Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+            example:
+              name: "task11"
+              hintText: "task 1 hintText"
+              type: "bottle-to-destroy"
+              representationOfTask: "icons-in-the-air"
+              xp: 10
+              countryCode: "pk"
+              city: "lahore"
+              longitude: 180
+              latitude: 90
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+
+  /api/admin/task/{taskId}:
+    get:
+      summary: Get tasks for admin
+      description: Get task details from the task ID.
+      tags:
+        - Task Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: taskId
+          in: path
+          description: The ID of the user to find mutual friends for.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+
+    delete:
+      summary: Delete a task
+      description: Delete a task based on its ID.
+      tags:
+        - Task Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: taskId
+          in: path
+          description: ID of the task to delete.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+
+  /api/user/task/{taskId}:
+    get:
+      summary: Get tasks for users
+      description: Get task details from the task ID for user.
+      tags:
+        - Task Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: taskId
+          in: path
+          description: The ID of the user to find mutual friends for.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+
+  /api/admin/task/all:
+    get:
+      summary: Get all tasks
+      description: Get all tasks for admin
+      tags:
+        - Task Routes
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllTasks'
+
+  /api/admin/task/update:
+    put:
+      summary: Update Task
+      description: Update task by admin
+      tags:
+        - Task Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        description: User's City Data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateResponse'
+            example:
+              taskId: "6491a3532a549d520d71f7f9"
+              name: "task1"
+              hintText: "task 1 hint Text"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+
+  /api/admin/announcement/create:
+    post:
+      summary: Create Announcement
+      description: Create a new announcement
+      tags:
+        - Announcement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Announcement'
+            example:
+              title: "A28"
+              description: "A28 description"
+              status: "publish"
+              expiryDate: "2024-07-08"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementResponse'
+
+
+  /api/admin/announcement/all:
+    get:
+      summary: Get all announcements
+      description: Get all announcements for admin
+      tags:
+        - Announcement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllAnnouncements'
+
+  /api/announcement/all/published:
+    get:
+      summary: Get all published announcements
+      description: Get all published announcements for admin
+      tags:
+        - Announcement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllAnnouncements'
+
+  /api/announcement/{announcementId}:
+    get:
+      summary: Get announcement
+      description: Get announcement details from the announcement ID.
+      tags:
+        - Announcement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: announcementId
+          in: path
+          description: The ID of the announcement.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementResponse'
+
+  /api/admin/announcement/update:
+    put:
+      summary: Update Announcement
+      description: Update announcement by admin
+      tags:
+        - Announcement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        description: Announcement's Updated Data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementUpdateResponse'
+            example:
+              announcementId: "647d89b52af38ccbd9404fe6"
+              title: "A2"
+              description: "A2 description"
+              status: "publish"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementResponse'
+
+  /api/admin/announcement/delete/{announcementId}:
+    delete:
+      summary: Delete an announcement
+      description: Delete an announcement based on its ID.
+      tags:
+        - Announcement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: announcementId
+          in: path
+          description: ID of the announcement to delete.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Announcement deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementDeleted'
+
+  /api/cities:
+    get:
+      summary: Get cities by country code
+      description: Retrieve cities based on the provided country code.
+      tags:
+        - Additional Routes
+      parameters:
+        - name: countryCode
+          in: query
+          description: Country code to filter cities.
+          required: true
+          schema:
+            type: string
+            example: "pk"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityResponse'
+                example:
+                  success: true
+                  result:
+                    cityNames:
+                      - "Abbottabad"
+                      - "Adilpur"
+                      - "Ahmadpur Sial"
+                      # (list of all city names)
+                      -
+  /api/admin/quest/create:
+    post:
+      summary: Create Quest
+      description: Create a new Quest
+      tags:
+        - Quest Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQuestRequest'
+            example:
+              name: "quest6"
+              mode: "free-to-play"
+              status: "activate"
+              countryCode: "pk"
+              city: "lahore"
+              startTime: "2024-07-22T11:59:58.000+00:00"
+              reward:
+                prizePool: "64b8ccc7c793e36018ceeee0"
+              taskArray:
+                - task: "64ad331653fe916582b52eab"
+                  taskTime: 259200000
+                  prizePool: "64b8ccc7c793e36018ceeee0"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateQuestResponse'
+
+  /api/admin/quest/{questId}:
+    get:
+      summary: "Get quest by ID (Admin)"
+      produces:
+        - "application/json"
+      tags:
+        - Quest Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: "questId"
+          in: "path"
+          description: "ID of the quest to retrieve"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetQuestResponseByID"
+
+    delete:
+      summary: Delete a Quest
+      description: Delete a Quest based on its ID.
+      tags:
+        - Quest Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: questId
+          in: path
+          description: ID of the Quest to delete.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Quest deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetQuestResponseByID'
+
+  /api/user/quest/{questId}:
+    get:
+      summary: "Get quest by ID (User)"
+      produces:
+        - "application/json"
+      tags:
+        - Quest Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: "questId"
+          in: "path"
+          description: "ID of the quest to retrieve"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetQuestResponseByID"
+
+  /api/admin/quest/all:
+    get:
+      summary: "Get All quest for Admin"
+      produces:
+        - "application/json"
+      tags:
+        - Quest Routes
+      security:
+        - ApiKeyAuth: [ ]
+
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAllQuestResponse"
+
+  /api/user/quest/all:
+    get:
+      summary: "Get All quest for Users"
+      produces:
+        - "application/json"
+      tags:
+        - Quest Routes
+      security:
+        - ApiKeyAuth: [ ]
+
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAllQuestResponse"
+
+  /api/admin/quest/update:
+    put:
+      summary: Update Quest
+      description: Update quest by admin
+      tags:
+        - Quest Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQuestAddID'
+            example:
+              questId: "64b91353f4fa7a06859bc91a"
+              name: "quest6"
+              mode: "free-to-play"
+              status: "activate"
+              countryCode: "pk"
+              city: "lahore"
+              startTime: "2024-07-22T11:59:58.000+00:00"
+              reward:
+                prizePool: "64b8ccc7c793e36018ceeee0"
+              taskArray:
+                - task: "64ad331653fe916582b52eab"
+                  taskTime: 259200000
+                  prizePool: "64b8ccc7c793e36018ceeee0"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetQuestResponseByID'
+
+  /api/admin/agreement/create:
+    post:
+      summary: Create Agreement
+      description: Create a new agreement
+      tags:
+        - Agreement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAgreementRequest'
+            example:
+              questId: "64b929e65bb64b5f31cede8b"
+              teamType: "solo"
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAgreementResponse'
+
+
+  /api/admin/agreement/{agreementId}:
+    get:
+      summary: "Get agreement by ID (Admin)"
+      produces:
+        - "application/json"
+      tags:
+        - Agreement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: "agreementId"
+          in: "path"
+          description: "ID of the quest to retrieve"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAgreementResponseByID"
+
+    delete:
+      summary: Delete an Agreement
+      description: Delete an agreement based on its ID.
+      tags:
+        - Agreement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: agreementId
+          in: path
+          description: ID of the Agreement to delete.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Agreement deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAgreementResponseByID'
+
+  /api/user/agreement/{agreementId}:
+    get:
+      summary: "Get agreement by ID (User)"
+      produces:
+        - "application/json"
+      tags:
+        - Agreement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      parameters:
+        - name: "agreementId"
+          in: "path"
+          description: "ID of the quest to retrieve"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAgreementResponseByID"
+
+
+  /api/admin/agreement/all:
+    get:
+      summary: "Get All quest for Admin"
+      produces:
+        - "application/json"
+      tags:
+        - Agreement Routes
+      security:
+        - ApiKeyAuth: [ ]
+
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdatedAgreement"
+
+  /api/admin/agreement/update:
+    put:
+      summary: Update Agreement
+      description: Update agreement by admin
+      tags:
+        - Agreement Routes
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAgreement'
+            example:
+              taskId: "64ad331653fe916582b52eab"
+              name: "Task1"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAgreementResponseByID'
+
+
+
+
+
+
+
+
+
+
+
+components:
+
+  responses:
+    '400':
+      description: Bad Request
+    '401':
+      description: Unauthorized Access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedResponse'
+    '500':
+      description: Internal Server Error
+
+
+
+  schemas:
+    LoginCredentials:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: User's email address
+          default: kissa+5@narsun.pk
+        password:
+          type: string
+          description: User's password
+          default: Testing@123
+
+
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates whether the login was successful or not
+        result:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            authToken:
+              type: string
+              description: Authentication token for the user
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: User ID
+        role:
+          type: string
+          description: User role
+        email:
+          type: string
+          description: User's email address
+        walletAddress:
+          type: string
+          description: User's wallet address
+        userName:
+          type: string
+          description: User's username
+        countryCode:
+          type: string
+          description: User's country code
+        countryName:
+          type: string
+          description: User's country name
+        city:
+          type: string
+          description: User's city
+        currentLocation:
+          $ref: '#/components/schemas/Location'
+        phone:
+          $ref: '#/components/schemas/Phone'
+        xp:
+          type: integer
+          description: User's experience points
+        deviceTokens:
+          type: array
+          items:
+            type: string
+          description: User's device tokens
+
+    Location:
+      type: object
+      properties:
+        countryCode:
+          type: string
+          description: Country code of the location
+        countryName:
+          type: string
+          description: Country name of the location
+        city:
+          type: string
+          description: City of the location
+        longitude:
+          type: number
+          format: float
+          description: Longitude of the location
+        latitude:
+          type: number
+          format: float
+          description: Latitude of the location
+
+    Phone:
+      type: object
+      properties:
+        phoneCountryCode:
+          type: string
+          description: Country code of the phone number
+        phoneCode:
+          type: string
+          description: Phone code of the phone number
+        phoneNumber:
+          type: string
+          description: Phone number
+        fullPhoneNumber:
+          type: string
+          description: Full phone number
+
+    UserRegistration:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+        password:
+          type: string
+          pattern: "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$"
+          description: The user's password. It should be at least 8 characters long and contain at least one letter, one number, and one special character.
+        userName:
+          type: string
+          description: The user's username.
+        phoneNumber:
+          type: string
+          pattern: "^(\\+[1-9]{1}[0-9]{1,3})?[0-9]{9,15}$"
+          description: The user's phone number. It can be prefixed with an international country code.
+        countryCode:
+          type: string
+          description: The country code of the user's location.
+        phoneCode:
+          type: string
+          description: The phone code for the user's country.
+        phoneCountryCode:
+          type: string
+          description: The phone country code for the user's location.
+        city:
+          type: string
+          description: The user's city.
+      required:
+        - email
+        - password
+        - userName
+        - phoneNumber
+        - countryCode
+        - phoneCode
+        - phoneCountryCode
+        - city
+    SendCodeRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+        phoneNumber:
+          required: false
+          type: string
+          pattern: "^(\\+[1-9]{1}[0-9]{1,3})?[0-9]{9,15}$"
+          description: The user's phone number. It can be prefixed with an international country code.
+      required:
+        - email
+        - phoneNumber
+    SendCodeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates whether the operation was successful or not.
+        result:
+          type: object
+          properties:
+            message:
+              type: string
+              description: The message indicating the result of the operation.
+      required:
+        - success
+        - result
+
+    VerificationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+        emailVerificationCode:
+          type: string
+          description: The verification code for the email.
+        phoneNumber:
+          type: string
+          description: The user's phone number.
+        smsVerificationCode:
+          type: string
+          description: The verification code for the phone number.
+      required:
+        - email
+        - emailVerificationCode
+        - phoneNumber
+        - smsVerificationCode
+
+    PasswordRestorationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: The user's email address.
+        emailVerificationCode:
+          type: string
+          description: The verification code for the email.
+        phoneNumber:
+          type: string
+          description: The user's phone number.
+        smsVerificationCode:
+          type: string
+          description: The verification code for the phone number.
+        password:
+          type: string
+          description: The new password for the user.
+      required:
+        - email
+        - emailVerificationCode
+        - phoneNumber
+        - smsVerificationCode
+        - password
+
+    Friend:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: User ID
+        userName:
+          type: string
+          description: User's name
+        countryCode:
+          type: string
+          description: Country code
+        city:
+          type: string
+          description: City name
+        xp:
+          type: integer
+          description: User's experience points
+
+    FriendList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        result:
+          type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: "#/components/schemas/Friend"
+            totalDocs:
+              type: integer
+              description: Total number of documents
+            totalPages:
+              type: integer
+              description: Total number of pages
+            currentPage:
+              type: integer
+              description: Current page number
+            itemsPerPage:
+              type: integer
+              description: Number of items per page
+
+    FamilyList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        result:
+          type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: "#/components/schemas/Friend"
+            totalDocs:
+              type: integer
+              description: Total number of documents
+            totalPages:
+              type: integer
+              description: Total number of pages
+            currentPage:
+              type: integer
+              description: Current page number
+            itemsPerPage:
+              type: integer
+              description: Number of items per page
+
+    UnauthorizedResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        result:
+          type: object
+          properties:
+            CODE:
+              type: string
+              example: CLIENT_UNAUTHORIZED
+            MESSAGE:
+              type: string
+              example: You are not authorized to request/modify the resource
+            STATUS:
+              type: integer
+              example: 401
+            details:
+              type: string
+              example: Authorization header not found
+      required:
+        - success
+        - result
+
+    SearchFriend:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        result:
+          type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: "#/components/schemas/UserWithFriendshipStatus"
+            totalDocs:
+              type: integer
+              description: Total number of documents
+            totalPages:
+              type: integer
+              description: Total number of pages
+            currentPage:
+              type: integer
+              description: Current page number
+            itemsPerPage:
+              type: integer
+              description: Number of items per page
+
+    UserWithFriendshipStatus:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            id:
+              type: string
+              description: Friend user Id
+            friendShipStatus:
+              type: string
+              description: Friendship status of the user
+      required:
+        - friendShipStatus
+
+    UserMutualFriends:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            id:
+              type: string
+              description: Friend user Id
+
+    UserMutualFriendList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        result:
+          type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: "#/components/schemas/UserMutualFriends"
+            totalDocs:
+              type: integer
+              description: Total number of documents
+            totalPages:
+              type: integer
+              description: Total number of pages
+            currentPage:
+              type: integer
+              description: Current page number
+            itemsPerPage:
+              type: integer
+              description: Number of items per page
+
+    FriendRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The ID of the user to whom the friend request will be sent.
+          example: 64afc307b3d06d7de74ab2eb
+
+    FriendRequestResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        result:
+          type: object
+          properties:
+            requester:
+              type: string
+              description: The ID of the user who sent the friend request (requester).
+            receiver:
+              type: string
+              description: The ID of the user who received the friend request (receiver).
+            friendShipStatus:
+              type: string
+              description: The status of the friendship, e.g., "pending," "accepted," etc.
+            familyStatus:
+              type: boolean
+              description: Indicates if the friendship has family status.
+            _id:
+              type: string
+              description: The ID of the friend request record.
+
+    updatedReceiverFriends:
+      type: object
+      properties:
+        docs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Friend'
+        totalDocs:
+          type: integer
+          description: Total number of documents
+        totalPages:
+          type: integer
+          description: Total number of pages
+        currentPage:
+          type: integer
+          description: Current page number
+        itemsPerPage:
+          type: integer
+          description: Number of items per page
+
+
+    FriendRemoveResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        result:
+          type: object
+          properties:
+            status:
+              type: boolean
+              description: Indicates if the update was successful.
+            updatedReceiverFriends:
+              type: object
+              $ref: '#/components/schemas/updatedReceiverFriends'
+
+    FriendAcceptResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        result:
+          type: object
+          properties:
+            status:
+              type: boolean
+              description: Indicates if the update was successful.
+            updatedReceiverPendingRequests:
+              type: object
+              $ref: '#/components/schemas/updatedReceiverFriends'
+            updatedReceiverFriends:
+              type: object
+              $ref: '#/components/schemas/updatedReceiverFriends'
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful.
+
+    AdminSignUp:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 8
+        fullName:
+          type: string
+      required:
+        - email
+        - password
+        - fullName
+
+    AdminVerifySignUp:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 8
+        nonce:
+          type: string
+      required:
+        - email
+        - password
+        - nonce
+
+
+    UserResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          $ref: '#/components/schemas/UserData'
+
+    AdminResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          $ref: '#/components/schemas/AdminData'
+
+    UserData:
+      type: object
+      properties:
+        admin:
+          $ref: '#/components/schemas/AdminData'
+        authToken:
+          type: string
+
+    AdminData:
+      type: object
+      properties:
+        _id:
+          type: string
+        role:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+
+    AdminForgetSignUp:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        forgotPasswordNonce:
+          type: string
+        password:
+          type: string
+          format: password
+          minLength: 8
+      required:
+        - email
+        - password
+        - forgotPasswordNonce
+
+    TaskRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        hintText:
+          type: string
+        type:
+          type: string
+        representationOfTask:
+          type: string
+        xp:
+          type: integer
+        countryCode:
+          type: string
+        city:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+
+    TaskLocation:
+      type: object
+      properties:
+        countryCode:
+          type: string
+        city:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+
+
+    TaskRespond:
+      type: object
+      properties:
+        name:
+          type: string
+        hintText:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        representationOfTask:
+          type: string
+        xp:
+          type: integer
+          example: 10
+        location:
+          $ref: '#/components/schemas/TaskLocation'
+        _id:
+          type: string
+
+
+    TaskData:
+      type: object
+      properties:
+        task:
+          $ref: '#/components/schemas/TaskRespond'
+
+    TaskResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        result:
+          $ref: '#/components/schemas/TaskData'
+
+    AllTasks:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        result:
+          type: object
+          properties:
+            tasks:
+              type: object
+              properties:
+                docs:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/TaskRespond"
+                totalDocs:
+                  type: integer
+                  description: Total number of documents
+                totalPages:
+                  type: integer
+                  description: Total number of pages
+                currentPage:
+                  type: integer
+                  description: Current page number
+                itemsPerPage:
+                  type: integer
+                  description: Number of items per page
+
+    TaskUpdateResponse:
+      type: object
+      properties:
+        taskId:
+          type: string
+        name:
+          type: string
+        hintText:
+          type: string
+
+    Announcement:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        expiryDate:
+          type: string
+          format: date
+
+    AnnouncementAddOn:
+      allOf:
+        - $ref: '#/components/schemas/Announcement'
+        - type: object
+          properties:
+            _id:
+              type: string
+              description: Friend user Id
+
+    AnnouncementAddOnID:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              description: Friend user Id
+        - $ref: '#/components/schemas/AnnouncementAddOn'
+
+
+
+    AnnouncementResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        result:
+          type: object
+          properties:
+            announcement:
+              $ref: '#/components/schemas/AnnouncementAddOn'
+
+    AnnouncementDeleted:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        result:
+          type: object
+          properties:
+            announcementDeleted:
+              $ref: '#/components/schemas/AnnouncementAddOn'
+
+    AllAnnouncements:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        result:
+          type: object
+          properties:
+            announcements:
+              type: object
+              properties:
+                docs:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/AnnouncementAddOnID"
+                totalDocs:
+                  type: integer
+                  description: Total number of documents
+                totalPages:
+                  type: integer
+                  description: Total number of pages
+                currentPage:
+                  type: integer
+                  description: Current page number
+                itemsPerPage:
+                  type: integer
+                  description: Number of items per page
+
+    AnnouncementUpdateResponse:
+      type: object
+      properties:
+        announcementId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+
+    CityResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          type: object
+          properties:
+            cityNames:
+              type: array
+              items:
+                type: string
+    CreateQuestAddID:
+      allOf:
+        - type: object
+          properties:
+            questId:
+              type: string
+              description: Friend user Id
+        - $ref: '#/components/schemas/CreateQuestRequest'
+
+    CreateAgreementAddID:
+      allOf:
+        - type: object
+          properties:
+            agreementId:
+              type: string
+              description: Friend user Id
+        - $ref: '#/components/schemas/CreateAgreementRequest'
+
+
+
+    CreateQuestRequest:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        mode:
+          type: "string"
+          enum: [ "free-to-play", "premium" ]
+        status:
+          type: "string"
+          enum: [ "activate", "inactive", "completed" ]
+        countryCode:
+          type: "string"
+        city:
+          type: "string"
+        startTime:
+          type: "string"
+          format: "date-time"
+        reward:
+          $ref: "#/components/schemas/Reward"
+        taskArray:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Task"
+    Reward:
+      type: "object"
+      properties:
+        prizePool:
+          type: "string"
+          description: "ID of the reward's prize pool"
+        winners:
+          type: "array"
+          items:
+            type: "string"
+          description: "List of winner IDs"
+    Task:
+      type: "object"
+      properties:
+        task:
+          type: "string"
+          description: "ID of the task"
+        taskTime:
+          type: "integer"
+          format: "int64"
+          description: "Time in milliseconds to complete the task"
+        prizePool:
+          type: "string"
+          description: "ID of the task's prize pool"
+
+    CreateQuestResponse:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        result:
+          $ref: "#/components/schemas/Quest"
+
+    Quest:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        mode:
+          type: "string"
+          enum: [ "free-to-play", "premium" ]
+        status:
+          type: "string"
+          enum: [ "activate", "inactive", "completed" ]
+        state:
+          type: "string"
+          enum: [ "active", "inactive" ]
+        countryCode:
+          type: "string"
+        city:
+          type: "string"
+        startTime:
+          type: "string"
+          format: "date-time"
+        reward:
+          $ref: "#/components/schemas/Reward"
+        participants:
+          type: "array"
+          items:
+            type: "string"
+          description: "List of participant IDs"
+        taskArray:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Task"
+        _id:
+          type: "string"
+          description: "Unique ID of the quest"
+        endTime:
+          type: "string"
+          format: "date-time"
+          description: "End time of the quest"
+
+    GetQuestResponseByID:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        result:
+          type: object
+          properties:
+            quest:
+              $ref: "#/components/schemas/Quest"
+
+    GetAllQuestResponse:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        result:
+          type: object
+          properties:
+            quest:
+              type: object
+              properties:
+                docs:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Quest"
+
+
+    GetAllAgreementResponse:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        result:
+          type: object
+          properties:
+            agreements:
+              type: array
+              items:
+                $ref: "#/components/schemas/Agreement"
+
+    UpdatedAgreement:
+      allOf:
+        - $ref: '#/components/schemas/Agreement'
+        - type: object
+          properties:
+            createdAt:
+              type: string
+              description: Time of creation
+            updatedAt:
+              type: string
+              description: Time of the last update
+            __v:
+              type: number
+              description: No clue
+
+
+
+
+    CreateAgreementRequest:     
+      type: "object"
+      properties:
+        questId:
+          type: "string"
+        teamType:
+          type: "string"
+          enum: [ "solo", "family", "friends" ]
+          description: you can use any of the types.
+        
+
+    GetAgreementResponseByID:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        result:
+          type: object
+          properties:
+            agreement:
+              $ref: "#/components/schemas/Agreement"
+
+
+    CreateAgreementResponse:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        result:
+          type: object
+          properties:
+            agreement:
+              $ref: "#/components/schemas/Agreement"
+
+    Agreement:
+      type: "object"
+      properties:
+        questId:
+          type: "string"
+        status:
+          type: "string"
+        teamType:
+          type: "string"
+        _id:
+          type: "string"
+          description: "Unique ID of the task"
+        players:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminData"
+
+    UpdateAgreement:
+      type: "object"
+      properties:
+        taskId:
+          type: "string"
+        status:
+          type: "string"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  securitySchemes:
+    ApiKeyAuth: # Define the security scheme
+      type: apiKey
+      name: Authorization
+      in: header
+  # Example Token: Bearer YOUR_AUTHORIZATION_TOKEN
+
