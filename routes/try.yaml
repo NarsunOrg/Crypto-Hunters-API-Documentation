@@ -1250,7 +1250,7 @@ paths:
       parameters:
         - name: "agreementId"
           in: "path"
-          description: "ID of the quest to retrieve"
+          description: "ID of the agreement to retrieve"
           required: true
           type: "string"
       responses:
@@ -1309,7 +1309,7 @@ paths:
 
   /api/admin/agreement/all:
     get:
-      summary: "Get All quest for Admin"
+      summary: "Get All agreement for Admin"
       produces:
         - "application/json"
       tags:
@@ -1323,7 +1323,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdatedAgreement"
+                $ref: "#/components/schemas/GetAllAgreementResponse"
 
   /api/admin/agreement/update:
     put:
@@ -2335,7 +2335,7 @@ components:
             agreements:
               type: array
               items:
-                $ref: "#/components/schemas/Agreement"
+                $ref: "#/components/schemas/UpdatedAgreement"
 
     UpdatedAgreement:
       allOf:

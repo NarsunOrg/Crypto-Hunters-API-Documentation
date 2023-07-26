@@ -2,7 +2,7 @@ const swaggerUI=require("swagger-ui-express")
 const swaggerJsDoc=require("swagger-jsdoc")
 const express=require('express');
 const cors=require('cors')
-const booksRouter=require("./routes/api");
+
 const PORT=4001;
 const app=express();
 require('dotenv').config();
@@ -29,7 +29,6 @@ const options = {
     },
     apis: ["./routes/try.yaml"],
 };
-app.use("/", booksRouter);
 
 const specs = swaggerJsDoc(options);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
